@@ -29,6 +29,6 @@
 
 总结性成果放在 `总结性文档/`，调研、验证和决策过程放在 `过程文件/`。后续代码开发再新增应用目录，不在本阶段生成空壳网站。
 
-本仓库按本地 Git 仓库交付，未配置远程仓库、未上传 GitHub，也未设置开源许可证。
+远程仓库：[tangdankang/coastal-typhoon-watch](https://github.com/tangdankang/coastal-typhoon-watch)。本地仓库继续保留；远程同步不代表网站已上线。本项目尚未设置开源许可证。
 
 文档版本：v1.0；编写日期：2026-08-31。
