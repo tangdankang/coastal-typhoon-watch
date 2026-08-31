@@ -1,0 +1,28 @@
+# Credentials and local settings
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies and generated application artifacts
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.venv/
+__pycache__/
+*.pyc
+
+# Runtime data; authorization must be checked before redistribution
+data/raw/
+data/private/
+logs/
+*.log
+
+# Editor and OS metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
