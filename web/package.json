@@ -11,8 +11,11 @@
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint",
     "format": "oxfmt",
-    "test": "node --experimental-strip-types --test scripts/demo-data.test.ts",
-    "export:html": "node scripts/export-html.mjs"
+    "test": "node --experimental-strip-types --test scripts/demo-data.test.ts scripts/live-data.test.ts scripts/fetch-typhoons.test.ts",
+    "export:html": "node scripts/export-html.mjs",
+    "fetch:data": "node --experimental-strip-types scripts/fetch-typhoons.ts",
+    "build:pages": "node --experimental-strip-types scripts/build-pages.mjs",
+    "test:pages": "node --experimental-strip-types scripts/verify-pages.mjs"
   },
   "dependencies": {
     "react": "19.2.8",

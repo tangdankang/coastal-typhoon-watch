@@ -2,7 +2,17 @@
 
 面向沿海居民的台风实况、路径预报与官方分级预警信息网站。
 
-当前阶段：交互式演示网页。已经实现台风面板、路径示意图与预警卡片；全部使用虚构固定数据，尚未接入真实气象数据。
+当前阶段：浙江公开台风数据接入与 GitHub Pages 自动发布。原有虚构演示保留为独立页面，不作为真实数据的回退来源。
+
+## 实况网站
+
+- [公开网站](https://tangdankang.github.io/coastal-typhoon-watch/)
+- [每小时更新与部署记录](https://github.com/tangdankang/coastal-typhoon-watch/actions/workflows/update-and-deploy.yml)
+- [实况接入与运维说明](总结性文档/实况接入与部署说明.md)
+
+页面展示来源系统标记的活动台风，以及最近三条非活动台风历史资料。包括名称、编号、坐标、移动方向和速度、中心风力、气压、观测路径，以及有效活动台风的中国预报路径。
+
+重要：本地官方分级预警**尚未接入**，状态为“未知”，不会由台风强度推算。每小时抓取不等于秒级实时；过期、错误与历史记录均明确提示。
 
 ## 体验演示
 
@@ -37,6 +47,6 @@
 
 总结性成果放在 `总结性文档/`，调研与验证记录放在 `过程文件/`，应用源码位于 `web/`，可直接打开的 HTML 交付件位于 `网页演示/`。
 
-远程仓库：[tangdankang/coastal-typhoon-watch](https://github.com/tangdankang/coastal-typhoon-watch)。本地仓库继续保留；远程同步不代表网站已上线。本项目尚未设置开源许可证。
+远程仓库：[tangdankang/coastal-typhoon-watch](https://github.com/tangdankang/coastal-typhoon-watch)。经所有者确认已改为公开。GitHub Pages 仅发布经过验证的静态页面和公开天气快照，不发布运行凭据。本项目尚未设置开源许可证。
 
 文档版本：v1.0；编写日期：2026-08-31。
