@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { sourceTime, normalizePoint, normalizeStorm, normalizeList, validateSnapshot, freshness, mapBounds, SOURCE_URL, type Snapshot } from '../lib/live-data.ts';
+import { sourceTime, normalizePoint, normalizeStorm, normalizeList, normalizeActivity, validateSnapshot, freshness, mapBounds, SOURCE_URL, type Snapshot } from '../lib/live-data.ts';
 export const rawPoint = { time: '2026-08-31 05:00:00', lng: '165.40', lat: '36.20', speed: '20', power: '8', pressure: '995', movespeed: '0', movedirection: '北', strong: '热带风暴', forecast: [] as unknown[] };
 export const rawStorm = { tfid: '202623', name: '测试资料（仅单元测试）', enname: 'TEST', isactive: '0', points: [rawPoint] };
 const now = Date.parse('2026-08-31T08:00:00Z');
@@ -26,6 +26,10 @@ await test('strict typhoon IDs, status and observation chronology', () => {
  assert.throws(() => normalizeList({ message: 'error' }));
  assert.throws(() => normalizeList([{ tfid: '../../escape', isactive: '1' }]));
  assert.deepEqual(normalizeList([]), []);
+ assert.deepEqual(normalizeActivity([]), []);
+ assert.deepEqual(normalizeActivity([{ ...rawPoint, tfid: '202618', name: '沙德尔', enname: 'SAUDEL' }]).map(v => v.id), ['202618']);
+ assert.throws(() => normalizeActivity([{ tfid: '202618', name: '缺少当前点', enname: 'TEST' }]));
+ assert.throws(() => normalizeActivity([{ ...rawPoint, tfid: '202618', name: 'A', enname: 'A' }, { ...rawPoint, tfid: '202618', name: 'B', enname: 'B' }]));
 });
 await test('only Chinese forecasts for active storms; historical forecasts never presented as current', () => {
  const forecast = [{ tm: '中国', forecastpoints: [rawPoint, { ...rawPoint, time: '2026-08-31 17:00:00' }] }, { tm: '日本', forecastpoints: [{ ...rawPoint, time: '2026-08-31 20:00:00' }] }];

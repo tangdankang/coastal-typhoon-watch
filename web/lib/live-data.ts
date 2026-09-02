@@ -50,6 +50,20 @@ export function normalizeList(input: unknown): { id: string; active: boolean; en
   return { id, active: String(r.isactive) === '1', endTime: sourceTime(r.endtime || r.starttime) };
  });
 }
+export function normalizeActivity(input: unknown): { id: string; active: true; endTime: string }[] {
+ if (!Array.isArray(input) || input.length > 25) throw new Error('Invalid activity list');
+ const seen = new Set<string>();
+ return input.map(item => {
+  const r = record(item), id = text(r.tfid);
+  if (!id || !/^\d{6,8}$/.test(id) || seen.has(id)) throw new Error('Invalid active typhoon identity');
+  seen.add(id);
+  // The activity endpoint has no isactive/endtime fields. Its current-point
+  // fields are validated here so a partial/error object cannot mean "active".
+  const point = normalizePoint(r);
+  if (!text(r.name) || r.enname == null) throw new Error('Invalid active typhoon label');
+  return { id, active: true as const, endTime: point.time };
+ });
+}
 export function normalizeStorm(input: unknown, expectedId: string, now = Date.now()): LiveStorm {
  const raw = record(Array.isArray(input) && input.length === 1 ? input[0] : input);
  if (String(raw.tfid) !== expectedId || !/^\d{6,8}$/.test(expectedId)) throw new Error('Source typhoon ID mismatch');

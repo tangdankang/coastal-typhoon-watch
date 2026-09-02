@@ -4,6 +4,7 @@ import { collectSnapshot } from './fetch-typhoons.ts';
 const point = { time: '2026-08-31 05:00:00', lng: '165.40', lat: '36.20', speed: '20', power: '8', pressure: '995', forecast: [] };
 const listed = { tfid: '202623', name: 'TEST FIXTURE', isactive: '0', endtime: point.time };
 const detail = { ...listed, enname: 'TEST', points: [point] };
+const activeItem = { ...point, tfid: '202623', name: 'TEST FIXTURE', enname: 'TEST' };
 const now = new Date('2026-08-31T08:00:00Z');
 await test('real empty activity list stays empty while historical detail remains explicitly historical', async () => {
  const paths: string[] = [];
@@ -23,7 +24,8 @@ await test('active list, yearly list and detail must agree; source errors fail c
  await assert.rejects(collectSnapshot(async path => path === 'TyhoonActivity' ? [] : path.startsWith('TyphoonList') ? [listed] : { ...detail, isactive: '1' }, now), /activity changed/);
 });
 await test('multiple active storms and tropical depression IDs are preserved', async () => {
- const active = [{ ...listed, isactive: '1' }, { ...listed, tfid: '20260021', isactive: '1' }];
- const result = await collectSnapshot(async path => path.startsWith('TyphoonInfo/') ? { ...detail, tfid: path.split('/')[1], isactive: '1' } : active, now);
+ const activity = [activeItem, { ...activeItem, tfid: '20260021' }];
+ const year = [{ ...listed, isactive: '1' }, { ...listed, tfid: '20260021', isactive: '1' }];
+ const result = await collectSnapshot(async path => path === 'TyhoonActivity' ? activity : path.startsWith('TyphoonInfo/') ? { ...detail, tfid: path.split('/')[1], isactive: '1' } : year, now);
  assert.deepEqual(result.activeIds, ['202623', '20260021']); assert.equal(result.storms.length, 2);
 });

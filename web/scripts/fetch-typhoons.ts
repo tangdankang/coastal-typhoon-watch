@@ -2,7 +2,7 @@
 import { mkdir, writeFile, rename } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { normalizeList, normalizeStorm, validateSnapshot, SOURCE_URL, SOURCE_NAME, type Snapshot } from '../lib/live-data.ts';
+import { normalizeActivity, normalizeList, normalizeStorm, validateSnapshot, SOURCE_URL, SOURCE_NAME, type Snapshot } from '../lib/live-data.ts';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 async function getJson(path: string): Promise<unknown> {
  const url = new URL('Api/' + path, SOURCE_URL);
@@ -22,8 +22,7 @@ async function getJson(path: string): Promise<unknown> {
 }
 export async function collectSnapshot(request: (path: string) => Promise<unknown> = getJson, now = new Date()): Promise<Snapshot> {
 // Endpoint spelling "TyhoonActivity" is the spelling actually used by the official site.
-const active = normalizeList(await request('TyhoonActivity'));
-if (active.some(s => !s.active)) throw new Error('Activity endpoint returned inactive storms');
+const active = normalizeActivity(await request('TyhoonActivity'));
 const year = Number(new Intl.DateTimeFormat('en', { timeZone: 'Asia/Shanghai', year: 'numeric' }).format(now));
 let yearList = normalizeList(await request('TyphoonList/' + year));
 if (!yearList.length) yearList = normalizeList(await request('TyphoonList/' + (year - 1)));
