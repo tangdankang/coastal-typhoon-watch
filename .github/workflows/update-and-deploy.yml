@@ -21,6 +21,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Scheduled source/build failures leave the last safe deployment online.
+    # They are visible in Actions but do not fail the whole workflow, avoiding
+    # recurring failure emails. Manual and push runs still fail normally.
+    continue-on-error: ${{ github.event_name == 'schedule' }}
+    outputs:
+      artifact-ready: ${{ steps.ready.outputs.value }}
     defaults:
       run:
         working-directory: web
@@ -53,9 +59,13 @@ jobs:
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: web/pages-dist
+      - name: Mark artifact ready
+        id: ready
+        run: echo "value=true" >> "$GITHUB_OUTPUT"
 
   deploy:
     needs: build
+    if: needs.build.outputs.artifact-ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
