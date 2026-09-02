@@ -68,6 +68,7 @@ jobs:
     if: needs.build.outputs.artifact-ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    continue-on-error: ${{ github.event_name == 'schedule' }}
     permissions:
       pages: write
       id-token: write
